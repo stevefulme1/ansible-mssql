@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for mssql_disaster_recovery
+# DR setup with log shipping and AG failover
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - mssql_disaster_recovery_host is defined
+    fail_msg: "mssql_disaster_recovery_host must be defined"
+    quiet: true
+
+- name: Execute mssql disaster recovery
+  ansible.builtin.debug:
+    msg: >-
+      DR setup with log shipping and AG failover.
+      Target: {{ mssql_disaster_recovery_host }}

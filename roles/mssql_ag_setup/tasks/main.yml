@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for mssql_ag_setup
+# Deploy Always On Availability Group from scratch
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - mssql_ag_setup_host is defined
+    fail_msg: "mssql_ag_setup_host must be defined"
+    quiet: true
+
+- name: Execute mssql ag setup
+  ansible.builtin.debug:
+    msg: >-
+      Deploy Always On Availability Group from scratch.
+      Target: {{ mssql_ag_setup_host }}

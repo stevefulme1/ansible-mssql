@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for mssql_performance_tuning
+
+# Target host
+mssql_performance_tuning_host: ""
+
+# Authentication
+mssql_performance_tuning_username: ""
+mssql_performance_tuning_password: ""
+mssql_performance_tuning_api_key: ""
+
+# Behavior
+mssql_performance_tuning_validate_certs: true
+mssql_performance_tuning_state: present

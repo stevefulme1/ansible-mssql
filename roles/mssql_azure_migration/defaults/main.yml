@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for mssql_azure_migration
+
+# Target host
+mssql_azure_migration_host: ""
+
+# Authentication
+mssql_azure_migration_username: ""
+mssql_azure_migration_password: ""
+mssql_azure_migration_api_key: ""
+
+# Behavior
+mssql_azure_migration_validate_certs: true
+mssql_azure_migration_state: present

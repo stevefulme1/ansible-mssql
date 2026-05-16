@@ -1,0 +1,27 @@
+---
+argument_specs:
+  main:
+    short_description: "DR setup with log shipping and AG failover"
+    options:
+      mssql_disaster_recovery_host:
+        description: Target host address
+        type: str
+        required: true
+      mssql_disaster_recovery_username:
+        description: Authentication username
+        type: str
+      mssql_disaster_recovery_password:
+        description: Authentication password
+        type: str
+      mssql_disaster_recovery_api_key:
+        description: API key for authentication
+        type: str
+      mssql_disaster_recovery_validate_certs:
+        description: Validate SSL certificates
+        type: bool
+        default: true
+      mssql_disaster_recovery_state:
+        description: Desired state
+        type: str
+        default: present
+        choices: [present, absent]

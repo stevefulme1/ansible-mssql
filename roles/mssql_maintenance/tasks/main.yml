@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for mssql_maintenance
+# Run index rebuild, statistics update, and integrity checks
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - mssql_maintenance_host is defined
+    fail_msg: "mssql_maintenance_host must be defined"
+    quiet: true
+
+- name: Execute mssql maintenance
+  ansible.builtin.debug:
+    msg: >-
+      Run index rebuild, statistics update, and integrity checks.
+      Target: {{ mssql_maintenance_host }}

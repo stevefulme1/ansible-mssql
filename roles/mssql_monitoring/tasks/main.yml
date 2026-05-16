@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for mssql_monitoring
+# Configure monitoring, alerts, and extended events
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - mssql_monitoring_host is defined
+    fail_msg: "mssql_monitoring_host must be defined"
+    quiet: true
+
+- name: Execute mssql monitoring
+  ansible.builtin.debug:
+    msg: >-
+      Configure monitoring, alerts, and extended events.
+      Target: {{ mssql_monitoring_host }}

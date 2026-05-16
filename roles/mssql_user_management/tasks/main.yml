@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for mssql_user_management
+# Bulk login, user, and role provisioning
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - mssql_user_management_host is defined
+    fail_msg: "mssql_user_management_host must be defined"
+    quiet: true
+
+- name: Execute mssql user management
+  ansible.builtin.debug:
+    msg: >-
+      Bulk login, user, and role provisioning.
+      Target: {{ mssql_user_management_host }}

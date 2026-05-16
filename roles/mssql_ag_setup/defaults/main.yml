@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for mssql_ag_setup
+
+# Target host
+mssql_ag_setup_host: ""
+
+# Authentication
+mssql_ag_setup_username: ""
+mssql_ag_setup_password: ""
+mssql_ag_setup_api_key: ""
+
+# Behavior
+mssql_ag_setup_validate_certs: true
+mssql_ag_setup_state: present

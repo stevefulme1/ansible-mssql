@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for mssql_user_management
+
+# Target host
+mssql_user_management_host: ""
+
+# Authentication
+mssql_user_management_username: ""
+mssql_user_management_password: ""
+mssql_user_management_api_key: ""
+
+# Behavior
+mssql_user_management_validate_certs: true
+mssql_user_management_state: present

@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for mssql_azure_migration
+# Migrate on-prem databases to Azure SQL
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - mssql_azure_migration_host is defined
+    fail_msg: "mssql_azure_migration_host must be defined"
+    quiet: true
+
+- name: Execute mssql azure migration
+  ansible.builtin.debug:
+    msg: >-
+      Migrate on-prem databases to Azure SQL.
+      Target: {{ mssql_azure_migration_host }}

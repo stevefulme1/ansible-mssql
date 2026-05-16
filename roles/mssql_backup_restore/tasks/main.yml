@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for mssql_backup_restore
+# Configure automated backup schedules and restore
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - mssql_backup_restore_host is defined
+    fail_msg: "mssql_backup_restore_host must be defined"
+    quiet: true
+
+- name: Execute mssql backup restore
+  ansible.builtin.debug:
+    msg: >-
+      Configure automated backup schedules and restore.
+      Target: {{ mssql_backup_restore_host }}

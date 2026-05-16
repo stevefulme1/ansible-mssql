@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for mssql_security_hardening
+
+# Target host
+mssql_security_hardening_host: ""
+
+# Authentication
+mssql_security_hardening_username: ""
+mssql_security_hardening_password: ""
+mssql_security_hardening_api_key: ""
+
+# Behavior
+mssql_security_hardening_validate_certs: true
+mssql_security_hardening_state: present

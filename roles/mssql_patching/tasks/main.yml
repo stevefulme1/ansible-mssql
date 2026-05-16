@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for mssql_patching
+# Rolling patch application across AG replicas
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - mssql_patching_host is defined
+    fail_msg: "mssql_patching_host must be defined"
+    quiet: true
+
+- name: Execute mssql patching
+  ansible.builtin.debug:
+    msg: >-
+      Rolling patch application across AG replicas.
+      Target: {{ mssql_patching_host }}

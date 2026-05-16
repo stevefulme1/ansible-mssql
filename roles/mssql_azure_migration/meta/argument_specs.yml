@@ -1,0 +1,27 @@
+---
+argument_specs:
+  main:
+    short_description: "Migrate on-prem databases to Azure SQL"
+    options:
+      mssql_azure_migration_host:
+        description: Target host address
+        type: str
+        required: true
+      mssql_azure_migration_username:
+        description: Authentication username
+        type: str
+      mssql_azure_migration_password:
+        description: Authentication password
+        type: str
+      mssql_azure_migration_api_key:
+        description: API key for authentication
+        type: str
+      mssql_azure_migration_validate_certs:
+        description: Validate SSL certificates
+        type: bool
+        default: true
+      mssql_azure_migration_state:
+        description: Desired state
+        type: str
+        default: present
+        choices: [present, absent]

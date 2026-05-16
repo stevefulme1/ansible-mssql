@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for mssql_performance_tuning
+# Apply performance tuning recommendations
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - mssql_performance_tuning_host is defined
+    fail_msg: "mssql_performance_tuning_host must be defined"
+    quiet: true
+
+- name: Execute mssql performance tuning
+  ansible.builtin.debug:
+    msg: >-
+      Apply performance tuning recommendations.
+      Target: {{ mssql_performance_tuning_host }}

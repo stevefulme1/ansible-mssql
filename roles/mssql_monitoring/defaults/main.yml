@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for mssql_monitoring
+
+# Target host
+mssql_monitoring_host: ""
+
+# Authentication
+mssql_monitoring_username: ""
+mssql_monitoring_password: ""
+mssql_monitoring_api_key: ""
+
+# Behavior
+mssql_monitoring_validate_certs: true
+mssql_monitoring_state: present

@@ -1,0 +1,27 @@
+---
+argument_specs:
+  main:
+    short_description: "Rolling patch application across AG replicas"
+    options:
+      mssql_patching_host:
+        description: Target host address
+        type: str
+        required: true
+      mssql_patching_username:
+        description: Authentication username
+        type: str
+      mssql_patching_password:
+        description: Authentication password
+        type: str
+      mssql_patching_api_key:
+        description: API key for authentication
+        type: str
+      mssql_patching_validate_certs:
+        description: Validate SSL certificates
+        type: bool
+        default: true
+      mssql_patching_state:
+        description: Desired state
+        type: str
+        default: present
+        choices: [present, absent]

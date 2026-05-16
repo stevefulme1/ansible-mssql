@@ -1,0 +1,27 @@
+---
+argument_specs:
+  main:
+    short_description: "Deploy Always On Availability Group from scratch"
+    options:
+      mssql_ag_setup_host:
+        description: Target host address
+        type: str
+        required: true
+      mssql_ag_setup_username:
+        description: Authentication username
+        type: str
+      mssql_ag_setup_password:
+        description: Authentication password
+        type: str
+      mssql_ag_setup_api_key:
+        description: API key for authentication
+        type: str
+      mssql_ag_setup_validate_certs:
+        description: Validate SSL certificates
+        type: bool
+        default: true
+      mssql_ag_setup_state:
+        description: Desired state
+        type: str
+        default: present
+        choices: [present, absent]

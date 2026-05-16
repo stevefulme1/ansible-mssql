@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for mssql_disaster_recovery
+
+# Target host
+mssql_disaster_recovery_host: ""
+
+# Authentication
+mssql_disaster_recovery_username: ""
+mssql_disaster_recovery_password: ""
+mssql_disaster_recovery_api_key: ""
+
+# Behavior
+mssql_disaster_recovery_validate_certs: true
+mssql_disaster_recovery_state: present

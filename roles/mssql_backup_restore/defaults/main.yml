@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for mssql_backup_restore
+
+# Target host
+mssql_backup_restore_host: ""
+
+# Authentication
+mssql_backup_restore_username: ""
+mssql_backup_restore_password: ""
+mssql_backup_restore_api_key: ""
+
+# Behavior
+mssql_backup_restore_validate_certs: true
+mssql_backup_restore_state: present

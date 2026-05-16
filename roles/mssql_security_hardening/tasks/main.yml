@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for mssql_security_hardening
+# Apply SQL Server security best practices and TDE
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - mssql_security_hardening_host is defined
+    fail_msg: "mssql_security_hardening_host must be defined"
+    quiet: true
+
+- name: Execute mssql security hardening
+  ansible.builtin.debug:
+    msg: >-
+      Apply SQL Server security best practices and TDE.
+      Target: {{ mssql_security_hardening_host }}

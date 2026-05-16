@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for mssql_maintenance
+
+# Target host
+mssql_maintenance_host: ""
+
+# Authentication
+mssql_maintenance_username: ""
+mssql_maintenance_password: ""
+mssql_maintenance_api_key: ""
+
+# Behavior
+mssql_maintenance_validate_certs: true
+mssql_maintenance_state: present
