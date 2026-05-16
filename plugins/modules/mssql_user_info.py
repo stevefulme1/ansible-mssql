@@ -13,9 +13,9 @@ __metaclass__ = type
 DOCUMENTATION = r"""
 ---
 module: mssql_user_info
-short_description: Retrieve user information
+short_description: Retrieve SQL Server user information
 description:
-    - Retrieve details about users.
+    - Retrieve SQL Server user information.
     - Read-only module.
 version_added: "1.0.0"
 author:
@@ -25,13 +25,10 @@ options:
         description: API host address.
         type: str
         required: true
-    username:
-        description: ID of a specific resource.
-        type: str
-    name:
-        description: Filter by name.
-        type: str
     db_username:
+        description: Database username to retrieve.
+        type: str
+    username:
         description: Authentication username.
         type: str
     password:
@@ -49,19 +46,13 @@ options:
 EXAMPLES = r"""
 - name: List all users
   stevefulme1.mssql.mssql_user_info:
-    host: api.example.com
-  register: result
-
-- name: Get a specific user
-  stevefulme1.mssql.mssql_user_info:
-    host: api.example.com
-    db_username: "example-id"
+    host: db.example.com
   register: result
 """
 
 RETURN = r"""
 users:
-    description: List of resource details.
+    description: List of users.
     returned: always
     type: list
     elements: dict
@@ -79,7 +70,26 @@ except ImportError:
 def main():
     module = AnsibleModule(
         argument_spec=dict(
-            username=dict(type="str"),
-            name=dict(type="str"),
+            db_username=dict(type="str"),
             host=dict(type="str", required=True),
-            
+            username=dict(type="str"),
+            password=dict(type="str", no_log=True),
+            api_key=dict(type="str", no_log=True),
+            validate_certs=dict(type="bool", default=True),
+        ),
+        supports_check_mode=True,
+    )
+    if not HAS_CLIENT:
+        module.fail_json(msg="Required Python libraries not found.")
+    client = ApiClient(module)
+    rid = module.params.get("db_username")
+    if rid:
+        result = client.get("user", rid)
+        resources = [result] if result else []
+    else:
+        resources = client.list("user", module.params)
+    module.exit_json(changed=False, users=resources)
+
+
+if __name__ == "__main__":
+    main()

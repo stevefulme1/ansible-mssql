@@ -29,13 +29,13 @@ options:
         description: API host address.
         type: str
         required: true
-    username:
-        description: Unique identifier of the user.
+    db_username:
+        description: Database username to manage.
         type: str
     name:
         description: Display name.
         type: str
-    db_username:
+    username:
         description: Authentication username.
         type: str
     password:
@@ -53,15 +53,9 @@ options:
 EXAMPLES = r"""
 - name: Create a user
   stevefulme1.mssql.mssql_user:
-    host: api.example.com
-    name: my-user
+    host: db.example.com
+    db_username: myuser
     state: present
-
-- name: Delete a user
-  stevefulme1.mssql.mssql_user:
-    host: api.example.com
-    db_username: "example-id"
-    state: absent
 """
 
 RETURN = r"""
@@ -84,7 +78,36 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             state=dict(type="str", default="present", choices=["present", "absent"]),
-            username=dict(type="str"),
+            db_username=dict(type="str"),
             name=dict(type="str"),
             host=dict(type="str", required=True),
-            
+            username=dict(type="str"),
+            password=dict(type="str", no_log=True),
+            api_key=dict(type="str", no_log=True),
+            validate_certs=dict(type="bool", default=True),
+        ),
+        supports_check_mode=True,
+        required_if=[("state", "absent", ("db_username",))],
+    )
+    if not HAS_CLIENT:
+        module.fail_json(msg="Required Python libraries not found.")
+    client = ApiClient(module)
+    state = module.params["state"]
+    rid = module.params.get("db_username")
+    if state == "present":
+        if rid:
+            result = client.update("user", rid, module.params)
+        else:
+            if module.check_mode:
+                module.exit_json(changed=True)
+            result = client.create("user", module.params)
+        module.exit_json(changed=True, user=result)
+    else:
+        if module.check_mode:
+            module.exit_json(changed=True)
+        client.delete("user", rid)
+        module.exit_json(changed=True)
+
+
+if __name__ == "__main__":
+    main()
