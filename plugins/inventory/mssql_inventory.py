@@ -7,12 +7,12 @@
 """mssql dynamic inventory plugin."""
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
 name: mssql_inventory
-plugin_type: inventory
 short_description: SQL Server instances
 description:
     - Dynamically discovers SQL Server instances.
@@ -59,6 +59,7 @@ from ansible.plugins.inventory import BaseInventoryPlugin
 
 try:
     import requests
+
     HAS_REQUESTS = True
 except ImportError:
     HAS_REQUESTS = False
