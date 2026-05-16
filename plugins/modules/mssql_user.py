@@ -35,7 +35,7 @@ options:
     name:
         description: Display name.
         type: str
-    username:
+    db_username:
         description: Authentication username.
         type: str
     password:
@@ -60,7 +60,7 @@ EXAMPLES = r"""
 - name: Delete a user
   stevefulme1.mssql.mssql_user:
     host: api.example.com
-    username: "example-id"
+    db_username: "example-id"
     state: absent
 """
 
@@ -87,36 +87,4 @@ def main():
             username=dict(type="str"),
             name=dict(type="str"),
             host=dict(type="str", required=True),
-            username=dict(type="str"),
-            password=dict(type="str", no_log=True),
-            api_key=dict(type="str", no_log=True),
-            validate_certs=dict(type="bool", default=True),
-        ),
-        supports_check_mode=True,
-        required_if=[("state", "absent", ("username",))],
-    )
-
-    if not HAS_CLIENT:
-        module.fail_json(msg="Required Python libraries not found.")
-
-    client = ApiClient(module)
-    state = module.params["state"]
-    resource_id = module.params.get("username")
-
-    if state == "present":
-        if resource_id:
-            result = client.update("user", resource_id, module.params)
-        else:
-            if module.check_mode:
-                module.exit_json(changed=True)
-            result = client.create("user", module.params)
-        module.exit_json(changed=True, user=result)
-    else:
-        if module.check_mode:
-            module.exit_json(changed=True)
-        client.delete("user", resource_id)
-        module.exit_json(changed=True)
-
-
-if __name__ == "__main__":
-    main()
+            

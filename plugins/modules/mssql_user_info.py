@@ -31,7 +31,7 @@ options:
     name:
         description: Filter by name.
         type: str
-    username:
+    db_username:
         description: Authentication username.
         type: str
     password:
@@ -55,7 +55,7 @@ EXAMPLES = r"""
 - name: Get a specific user
   stevefulme1.mssql.mssql_user_info:
     host: api.example.com
-    username: "example-id"
+    db_username: "example-id"
   register: result
 """
 
@@ -82,28 +82,4 @@ def main():
             username=dict(type="str"),
             name=dict(type="str"),
             host=dict(type="str", required=True),
-            username=dict(type="str"),
-            password=dict(type="str", no_log=True),
-            api_key=dict(type="str", no_log=True),
-            validate_certs=dict(type="bool", default=True),
-        ),
-        supports_check_mode=True,
-    )
-
-    if not HAS_CLIENT:
-        module.fail_json(msg="Required Python libraries not found.")
-
-    client = ApiClient(module)
-    resource_id = module.params.get("username")
-
-    if resource_id:
-        result = client.get("user", resource_id)
-        resources = [result] if result else []
-    else:
-        resources = client.list("user", module.params)
-
-    module.exit_json(changed=False, users=resources)
-
-
-if __name__ == "__main__":
-    main()
+            
