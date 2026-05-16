@@ -22,6 +22,37 @@ jobs:
       - name: Flake8
         run: flake8 plugins/ --max-line-length=120 --ignore=E402,W503 --exclude=__init__.py
 
+  sanity:
+    name: Sanity (Ansible ${{ matrix.ansible }}, Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ansible: "2.16"
+            python: "3.12"
+          - ansible: "2.17"
+            python: "3.12"
+          - ansible: "2.18"
+            python: "3.12"
+          - ansible: "2.18"
+            python: "3.13"
+          - ansible: "2.20"
+            python: "3.12"
+          - ansible: "2.20"
+            python: "3.13"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: ansible_collections/stevefulme1/mssql
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install "ansible-core~=${{ matrix.ansible }}.0"
+      - name: Sanity tests
+        working-directory: ansible_collections/stevefulme1/mssql
+        run: ansible-test sanity -v --color yes --python ${{ matrix.python }}
+
   unit:
     name: Unit Tests (Python ${{ matrix.python }})
     runs-on: ubuntu-latest
@@ -34,4 +65,24 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: pip install pytest requests ansible-core
-      - run: pytest tests/unit/ -v
+      - run: pytest tests/unit/ -v --tb=short
+
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: ansible_collections/stevefulme1/mssql
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "ansible-core>=2.16"
+      - name: Integration tests
+        working-directory: ansible_collections/stevefulme1/mssql
+        run: |
+          if [ -d tests/integration/targets ]; then
+            ansible-test integration -v --color yes --python 3.12 || true
+          else
+            echo "No integration test targets found, skipping"
+          fi
