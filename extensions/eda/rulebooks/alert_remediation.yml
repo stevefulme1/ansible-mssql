@@ -1,0 +1,25 @@
+---
+- name: "Mssql Alert Remediation"
+  hosts: all
+  sources:
+    - stevefulme1.mssql.service_broker:
+        host: 0.0.0.0
+        port: 5000
+  rules:
+    - name: Critical alert
+      condition: >-
+        event.mssql.severity is defined and
+        event.mssql.severity == "critical"
+      action:
+        run_playbook:
+          name: remediate.yml
+          extra_vars:
+            alert_host: "{{ event.mssql.host | default('') }}"
+            alert_id: "{{ event.mssql.id | default('') }}"
+    - name: Warning alert
+      condition: >-
+        event.mssql.severity is defined and
+        event.mssql.severity == "warning"
+      action:
+        print_event:
+          pretty: true

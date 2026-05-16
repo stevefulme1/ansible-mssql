@@ -1,0 +1,15 @@
+---
+namespace: stevefulme1
+name: mssql
+version: 1.0.0
+readme: README.md
+authors:
+  - Steve Fulmer <sfulmer@redhat.com>
+description: >-
+  Ansible Collection for Microsoft SQL Server — database/login/user/role management, AG, TDE, Agent jobs, Azure SQL, and EDA event-driven automation
+license_file: LICENSE
+tags: [mssql]
+repository: https://github.com/stevefulme1/ansible-mssql
+documentation: https://github.com/stevefulme1/ansible-mssql
+issues: https://github.com/stevefulme1/ansible-mssql/issues
+build_ignore: [.git, .github, tests, '*.tar.gz']

@@ -1,0 +1,109 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# Copyright 2026 Steve Fulmer
+# Apache-2.0 (see LICENSE)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+"""mssql_extended_events_info module."""
+
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+DOCUMENTATION = r"""
+---
+module: mssql_extended_events_info
+short_description: Retrieve xe session information
+description:
+    - Retrieve details about xe sessions.
+    - Read-only module.
+version_added: "1.0.0"
+author:
+    - Steve Fulmer (@stevefulme1)
+options:
+    host:
+        description: API host address.
+        type: str
+        required: true
+    session_name:
+        description: ID of a specific resource.
+        type: str
+    name:
+        description: Filter by name.
+        type: str
+    username:
+        description: Authentication username.
+        type: str
+    password:
+        description: Authentication password.
+        type: str
+    api_key:
+        description: API key for authentication.
+        type: str
+    validate_certs:
+        description: Validate SSL certificates.
+        type: bool
+        default: true
+"""
+
+EXAMPLES = r"""
+- name: List all xe sessions
+  stevefulme1.mssql.mssql_extended_events_info:
+    host: api.example.com
+  register: result
+
+- name: Get a specific xe session
+  stevefulme1.mssql.mssql_extended_events_info:
+    host: api.example.com
+    session_name: "example-id"
+  register: result
+"""
+
+RETURN = r"""
+xe_sessions:
+    description: List of resource details.
+    returned: always
+    type: list
+    elements: dict
+"""
+
+from ansible.module_utils.basic import AnsibleModule
+
+try:
+    from ansible_collections.stevefulme1.mssql.plugins.module_utils.api_client import ApiClient
+    HAS_CLIENT = True
+except ImportError:
+    HAS_CLIENT = False
+
+
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            session_name=dict(type="str"),
+            name=dict(type="str"),
+            host=dict(type="str", required=True),
+            username=dict(type="str"),
+            password=dict(type="str", no_log=True),
+            api_key=dict(type="str", no_log=True),
+            validate_certs=dict(type="bool", default=True),
+        ),
+        supports_check_mode=True,
+    )
+
+    if not HAS_CLIENT:
+        module.fail_json(msg="Required Python libraries not found.")
+
+    client = ApiClient(module)
+    resource_id = module.params.get("session_name")
+
+    if resource_id:
+        result = client.get("xe_session", resource_id)
+        resources = [result] if result else []
+    else:
+        resources = client.list("xe_session", module.params)
+
+    module.exit_json(changed=False, xe_sessions=resources)
+
+
+if __name__ == "__main__":
+    main()

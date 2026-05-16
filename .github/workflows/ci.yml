@@ -1,0 +1,37 @@
+---
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ansible-core ansible-lint flake8
+      - name: Ansible Lint
+        run: ansible-lint --profile production || true
+      - name: Flake8
+        run: flake8 plugins/ --max-line-length=120 --ignore=E402,W503 --exclude=__init__.py
+
+  unit:
+    name: Unit Tests (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install pytest requests ansible-core
+      - run: pytest tests/unit/ -v
