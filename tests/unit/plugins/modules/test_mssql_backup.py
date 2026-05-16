@@ -6,7 +6,7 @@ __metaclass__ = type
 from unittest.mock import MagicMock
 
 
-class TestCreate:
+TestCreate:
     def test_create_returns_resource(self):
         client = MagicMock()
         client.create.return_value = dict(id="123", name="test")
@@ -21,7 +21,7 @@ class TestCreate:
         assert result["name"] == "prod"
 
 
-class TestDelete:
+TestDelete:
     def test_delete_existing(self):
         client = MagicMock()
         client.delete("backup", "123")
@@ -34,7 +34,7 @@ class TestDelete:
         assert result is None
 
 
-class TestList:
+TestList:
     def test_list_returns_items(self):
         client = MagicMock()
         client.list.return_value = [dict(id="1"), dict(id="2")]
@@ -48,7 +48,7 @@ class TestList:
         assert len(result) == 0
 
 
-class TestGet:
+TestGet:
     def test_get_existing(self):
         client = MagicMock()
         client.get.return_value = dict(id="123", name="test")
@@ -62,7 +62,7 @@ class TestGet:
         assert result is None
 
 
-class TestUpdate:
+TestUpdate:
     def test_update_returns_updated(self):
         client = MagicMock()
         client.update.return_value = dict(id="123", name="updated")
