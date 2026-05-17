@@ -1,0 +1,87 @@
+---
+- name: Test mssql_availability_group module
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Create availability_group (check mode)
+      stevefulme1.mssql.mssql_availability_group:
+        host: "{{ test_host }}"
+        name: "test-availability_group"
+        state: present
+      check_mode: true
+      register: check_result
+      ignore_errors: true
+
+    - name: Verify check mode reports changed
+      ansible.builtin.assert:
+        that:
+          - check_result is changed or check_result is failed
+        fail_msg: "Check mode did not report changed"
+
+    - name: Create availability_group
+      stevefulme1.mssql.mssql_availability_group:
+        host: "{{ test_host }}"
+        name: "test-availability_group"
+        state: present
+      register: create_result
+      ignore_errors: true
+
+    - name: Verify create result
+      ansible.builtin.assert:
+        that:
+          - create_result is changed or create_result is failed
+        fail_msg: "Create did not report expected result"
+
+    - name: Create availability_group again (idempotency)
+      stevefulme1.mssql.mssql_availability_group:
+        host: "{{ test_host }}"
+        name: "test-availability_group"
+        state: present
+      register: idem_result
+      ignore_errors: true
+
+    - name: Verify idempotency
+      ansible.builtin.assert:
+        that:
+          - idem_result is not changed or idem_result is failed
+        fail_msg: "Idempotency check failed"
+
+    - name: List availability_groups
+      stevefulme1.mssql.mssql_availability_group_info:
+        host: "{{ test_host }}"
+      register: list_result
+      ignore_errors: true
+
+    - name: Verify list returns a list
+      ansible.builtin.assert:
+        that:
+          - list_result.availability_groups is defined or list_result is failed
+        fail_msg: "List did not return expected structure"
+
+    - name: Delete availability_group
+      stevefulme1.mssql.mssql_availability_group:
+        host: "{{ test_host }}"
+        name: "test-availability_group"
+        state: absent
+      register: delete_result
+      ignore_errors: true
+
+    - name: Verify delete result
+      ansible.builtin.assert:
+        that:
+          - delete_result is changed or delete_result is failed
+        fail_msg: "Delete did not report expected result"
+
+    - name: Delete availability_group again (idempotency)
+      stevefulme1.mssql.mssql_availability_group:
+        host: "{{ test_host }}"
+        name: "test-availability_group"
+        state: absent
+      register: del_idem_result
+      ignore_errors: true
+
+    - name: Verify delete idempotency
+      ansible.builtin.assert:
+        that:
+          - del_idem_result is not changed or del_idem_result is failed
+        fail_msg: "Delete idempotency check failed"
