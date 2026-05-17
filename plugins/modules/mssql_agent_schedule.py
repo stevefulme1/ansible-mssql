@@ -104,14 +104,30 @@ def main():
     resource_id = module.params.get("schedule_name")
 
     if state == "present":
+        existing = None
         if resource_id:
-            result = client.update("agent_schedule", resource_id, module.params)
+            existing = client.get("agent_schedule", resource_id)
+        elif module.params.get("name"):
+            candidates = client.list("agent_schedule", {{"name": module.params["name"]}})
+            if candidates:
+                existing = candidates[0]
+
+        if existing:
+            if module.check_mode:
+                module.exit_json(changed=False, agent_schedule=existing)
+            result = client.update("agent_schedule", resource_id or existing.get("id", ""), module.params)
+            module.exit_json(changed=True, agent_schedule=result)
         else:
             if module.check_mode:
                 module.exit_json(changed=True)
             result = client.create("agent_schedule", module.params)
-        module.exit_json(changed=True, agent_schedule=result)
+            module.exit_json(changed=True, agent_schedule=result)
     else:
+        existing = None
+        if resource_id:
+            existing = client.get("agent_schedule", resource_id)
+        if not existing:
+            module.exit_json(changed=False)
         if module.check_mode:
             module.exit_json(changed=True)
         client.delete("agent_schedule", resource_id)

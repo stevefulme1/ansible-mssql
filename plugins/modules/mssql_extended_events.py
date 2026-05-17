@@ -104,14 +104,30 @@ def main():
     resource_id = module.params.get("session_name")
 
     if state == "present":
+        existing = None
         if resource_id:
-            result = client.update("xe_session", resource_id, module.params)
+            existing = client.get("xe_session", resource_id)
+        elif module.params.get("name"):
+            candidates = client.list("xe_session", {{"name": module.params["name"]}})
+            if candidates:
+                existing = candidates[0]
+
+        if existing:
+            if module.check_mode:
+                module.exit_json(changed=False, xe_session=existing)
+            result = client.update("xe_session", resource_id or existing.get("id", ""), module.params)
+            module.exit_json(changed=True, xe_session=result)
         else:
             if module.check_mode:
                 module.exit_json(changed=True)
             result = client.create("xe_session", module.params)
-        module.exit_json(changed=True, xe_session=result)
+            module.exit_json(changed=True, xe_session=result)
     else:
+        existing = None
+        if resource_id:
+            existing = client.get("xe_session", resource_id)
+        if not existing:
+            module.exit_json(changed=False)
         if module.check_mode:
             module.exit_json(changed=True)
         client.delete("xe_session", resource_id)

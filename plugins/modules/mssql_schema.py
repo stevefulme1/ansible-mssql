@@ -104,14 +104,30 @@ def main():
     resource_id = module.params.get("schema_name")
 
     if state == "present":
+        existing = None
         if resource_id:
-            result = client.update("schema", resource_id, module.params)
+            existing = client.get("schema", resource_id)
+        elif module.params.get("name"):
+            candidates = client.list("schema", {{"name": module.params["name"]}})
+            if candidates:
+                existing = candidates[0]
+
+        if existing:
+            if module.check_mode:
+                module.exit_json(changed=False, schema=existing)
+            result = client.update("schema", resource_id or existing.get("id", ""), module.params)
+            module.exit_json(changed=True, schema=result)
         else:
             if module.check_mode:
                 module.exit_json(changed=True)
             result = client.create("schema", module.params)
-        module.exit_json(changed=True, schema=result)
+            module.exit_json(changed=True, schema=result)
     else:
+        existing = None
+        if resource_id:
+            existing = client.get("schema", resource_id)
+        if not existing:
+            module.exit_json(changed=False)
         if module.check_mode:
             module.exit_json(changed=True)
         client.delete("schema", resource_id)

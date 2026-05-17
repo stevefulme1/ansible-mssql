@@ -104,14 +104,30 @@ def main():
     resource_id = module.params.get("login_name")
 
     if state == "present":
+        existing = None
         if resource_id:
-            result = client.update("login", resource_id, module.params)
+            existing = client.get("login", resource_id)
+        elif module.params.get("name"):
+            candidates = client.list("login", {{"name": module.params["name"]}})
+            if candidates:
+                existing = candidates[0]
+
+        if existing:
+            if module.check_mode:
+                module.exit_json(changed=False, login=existing)
+            result = client.update("login", resource_id or existing.get("id", ""), module.params)
+            module.exit_json(changed=True, login=result)
         else:
             if module.check_mode:
                 module.exit_json(changed=True)
             result = client.create("login", module.params)
-        module.exit_json(changed=True, login=result)
+            module.exit_json(changed=True, login=result)
     else:
+        existing = None
+        if resource_id:
+            existing = client.get("login", resource_id)
+        if not existing:
+            module.exit_json(changed=False)
         if module.check_mode:
             module.exit_json(changed=True)
         client.delete("login", resource_id)

@@ -104,14 +104,30 @@ def main():
     resource_id = module.params.get("publication_name")
 
     if state == "present":
+        existing = None
         if resource_id:
-            result = client.update("replication", resource_id, module.params)
+            existing = client.get("replication", resource_id)
+        elif module.params.get("name"):
+            candidates = client.list("replication", {{"name": module.params["name"]}})
+            if candidates:
+                existing = candidates[0]
+
+        if existing:
+            if module.check_mode:
+                module.exit_json(changed=False, replication=existing)
+            result = client.update("replication", resource_id or existing.get("id", ""), module.params)
+            module.exit_json(changed=True, replication=result)
         else:
             if module.check_mode:
                 module.exit_json(changed=True)
             result = client.create("replication", module.params)
-        module.exit_json(changed=True, replication=result)
+            module.exit_json(changed=True, replication=result)
     else:
+        existing = None
+        if resource_id:
+            existing = client.get("replication", resource_id)
+        if not existing:
+            module.exit_json(changed=False)
         if module.check_mode:
             module.exit_json(changed=True)
         client.delete("replication", resource_id)

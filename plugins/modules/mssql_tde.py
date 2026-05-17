@@ -104,14 +104,30 @@ def main():
     resource_id = module.params.get("cert_name")
 
     if state == "present":
+        existing = None
         if resource_id:
-            result = client.update("tde", resource_id, module.params)
+            existing = client.get("tde", resource_id)
+        elif module.params.get("name"):
+            candidates = client.list("tde", {{"name": module.params["name"]}})
+            if candidates:
+                existing = candidates[0]
+
+        if existing:
+            if module.check_mode:
+                module.exit_json(changed=False, tde=existing)
+            result = client.update("tde", resource_id or existing.get("id", ""), module.params)
+            module.exit_json(changed=True, tde=result)
         else:
             if module.check_mode:
                 module.exit_json(changed=True)
             result = client.create("tde", module.params)
-        module.exit_json(changed=True, tde=result)
+            module.exit_json(changed=True, tde=result)
     else:
+        existing = None
+        if resource_id:
+            existing = client.get("tde", resource_id)
+        if not existing:
+            module.exit_json(changed=False)
         if module.check_mode:
             module.exit_json(changed=True)
         client.delete("tde", resource_id)

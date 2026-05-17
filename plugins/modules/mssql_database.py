@@ -104,14 +104,30 @@ def main():
     resource_id = module.params.get("db_name")
 
     if state == "present":
+        existing = None
         if resource_id:
-            result = client.update("database", resource_id, module.params)
+            existing = client.get("database", resource_id)
+        elif module.params.get("name"):
+            candidates = client.list("database", {{"name": module.params["name"]}})
+            if candidates:
+                existing = candidates[0]
+
+        if existing:
+            if module.check_mode:
+                module.exit_json(changed=False, database=existing)
+            result = client.update("database", resource_id or existing.get("id", ""), module.params)
+            module.exit_json(changed=True, database=result)
         else:
             if module.check_mode:
                 module.exit_json(changed=True)
             result = client.create("database", module.params)
-        module.exit_json(changed=True, database=result)
+            module.exit_json(changed=True, database=result)
     else:
+        existing = None
+        if resource_id:
+            existing = client.get("database", resource_id)
+        if not existing:
+            module.exit_json(changed=False)
         if module.check_mode:
             module.exit_json(changed=True)
         client.delete("database", resource_id)

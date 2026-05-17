@@ -95,14 +95,30 @@ def main():
     state = module.params["state"]
     rid = module.params.get("db_username")
     if state == "present":
+        existing = None
         if rid:
-            result = client.update("user", rid, module.params)
+            existing = client.get("user", rid)
+        elif module.params.get("name"):
+            candidates = client.list("user", {{"name": module.params["name"]}})
+            if candidates:
+                existing = candidates[0]
+
+        if existing:
+            if module.check_mode:
+                module.exit_json(changed=False, user=existing)
+            result = client.update("user", rid or existing.get("id", ""), module.params)
+            module.exit_json(changed=True, user=result)
         else:
             if module.check_mode:
                 module.exit_json(changed=True)
             result = client.create("user", module.params)
-        module.exit_json(changed=True, user=result)
+            module.exit_json(changed=True, user=result)
     else:
+        existing = None
+        if rid:
+            existing = client.get("user", rid)
+        if not existing:
+            module.exit_json(changed=False)
         if module.check_mode:
             module.exit_json(changed=True)
         client.delete("user", rid)
