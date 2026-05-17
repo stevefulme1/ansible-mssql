@@ -51,4 +51,3 @@ plugins/modules/mssql_script.py
 plugins/modules/mssql_tde_info.py
 plugins/modules/mssql_tde.py
 plugins/modules/mssql_user_info.py
-plugins/modules/mssql_user.py pylint:unhashable-member
