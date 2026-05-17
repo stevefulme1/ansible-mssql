@@ -108,7 +108,7 @@ def main():
         if resource_id:
             existing = client.get("sql_firewall", resource_id)
         elif module.params.get("name"):
-            candidates = client.list("sql_firewall", {{"name": module.params["name"]}})
+            candidates = client.list("sql_firewall", {dict(name=module.params.get("name", ""))})
             if candidates:
                 existing = candidates[0]
 

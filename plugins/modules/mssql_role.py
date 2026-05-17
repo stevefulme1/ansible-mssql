@@ -108,7 +108,7 @@ def main():
         if resource_id:
             existing = client.get("role", resource_id)
         elif module.params.get("name"):
-            candidates = client.list("role", {{"name": module.params["name"]}})
+            candidates = client.list("role", {dict(name=module.params.get("name", ""))})
             if candidates:
                 existing = candidates[0]
 
