@@ -99,7 +99,8 @@ def main():
         if rid:
             existing = client.get("user", rid)
         elif module.params.get("name"):
-            candidates = client.list("user", {dict(name=module.params.get("name", ""))})
+            name_filter = module.params.get("name", "")
+            candidates = client.list("user", {"name": name_filter})
             if candidates:
                 existing = candidates[0]
 
