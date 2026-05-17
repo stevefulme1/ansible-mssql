@@ -61,11 +61,15 @@ jobs:
         python: ["3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: ansible_collections/stevefulme1/mssql
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
       - run: pip install pytest requests ansible-core
-      - run: pytest tests/unit/ -v --tb=short
+      - name: Unit tests
+        working-directory: ansible_collections/stevefulme1/mssql
+        run: pytest tests/unit/ -v --tb=short
 
   integration:
     name: Integration Tests
