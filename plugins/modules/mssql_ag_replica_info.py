@@ -44,6 +44,21 @@ options:
         description: Validate SSL certificates.
         type: bool
         default: true
+  limit:
+    description:
+      - Maximum number of results to return (maps to SQL TOP/FETCH).
+    type: int
+    default: 100
+  offset:
+    description:
+      - Number of results to skip (maps to SQL OFFSET).
+    type: int
+    default: 0
+  max_results:
+    description:
+      - Maximum total results to return.
+    type: int
+    default: 1000
 """
 
 EXAMPLES = r"""
@@ -86,6 +101,9 @@ def main():
             password=dict(type="str", no_log=True),
             api_key=dict(type="str", no_log=True),
             validate_certs=dict(type="bool", default=True),
+            limit=dict(type="int", default=100),
+            offset=dict(type="int", default=0),
+            max_results=dict(type="int", default=1000),
         ),
         supports_check_mode=True,
     )
@@ -100,6 +118,11 @@ def main():
         result = client.get("ag_replica", resource_id)
         resources = [result] if result else []
     else:
+        _params = dict(module.params)
+        if module.params.get("limit"):
+            _params["limit"] = module.params["limit"]
+        if module.params.get("offset"):
+            _params["offset"] = module.params["offset"]
         resources = client.list("ag_replica", module.params)
 
     module.exit_json(changed=False, ag_replicas=resources)
