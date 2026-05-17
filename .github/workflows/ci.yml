@@ -69,6 +69,8 @@ jobs:
       - run: pip install pytest requests ansible-core
       - name: Unit tests
         working-directory: ansible_collections/stevefulme1/mssql
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: pytest tests/unit/ -v --tb=short
 
   integration:
