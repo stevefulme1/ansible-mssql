@@ -1,0 +1,79 @@
+---
+# extensions/audit/event_query.yml
+# Maps module return values to the AAP Normalized Resource Taxonomy
+# for indirect node counting.
+#
+# MSSQL modules return API response dicts.  Azure SQL modules use
+# server_name/db_name identifiers; on-prem modules use similar patterns.
+
+stevefulme1.mssql.mssql_database:
+  query: >-
+    {
+      name: .database.name,
+      canonical_facts: {
+        uuid: .database.id
+      },
+      facts: {
+        device_type: "database_relational"
+      }
+    }
+
+stevefulme1.mssql.mssql_availability_group:
+  query: >-
+    {
+      name: .ag.name,
+      canonical_facts: {
+        uuid: .ag.id
+      },
+      facts: {
+        device_type: "database_relational"
+      }
+    }
+
+stevefulme1.mssql.mssql_login:
+  query: >-
+    {
+      name: .login.name,
+      canonical_facts: {
+        uuid: .login.id
+      },
+      facts: {
+        device_type: "database_relational"
+      }
+    }
+
+stevefulme1.mssql.mssql_backup:
+  query: >-
+    {
+      name: .backup.name,
+      canonical_facts: {
+        uuid: .backup.id
+      },
+      facts: {
+        device_type: "database_relational"
+      }
+    }
+
+stevefulme1.mssql.azure_sql_server:
+  query: >-
+    {
+      name: .sql_server.name,
+      canonical_facts: {
+        uuid: .sql_server.id
+      },
+      facts: {
+        device_type: "database_relational"
+      }
+    }
+
+stevefulme1.mssql.azure_sql_database:
+  query: >-
+    {
+      name: .sql_database.name,
+      canonical_facts: {
+        uuid: .sql_database.id
+      },
+      facts: {
+        device_type: "database_relational"
+      }
+    }
