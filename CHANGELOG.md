@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1] - 2026-05-18
+
+### Security
+- Prevent credential leak in API request bodies: connection params (password,
+  api_key, username, host, validate_certs) are now stripped before POST/PUT
+- Added request timeout (30 s) to all HTTP methods to prevent hung connections
+- Hardened .gitignore against accidental credential commits
+
 ## [2.0.0] - 2026-05-17
 
 ### Added

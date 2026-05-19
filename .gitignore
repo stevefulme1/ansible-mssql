@@ -2,3 +2,26 @@
 *.pyc
 __pycache__/
 tests/output/
+
+# Credentials & secrets
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.p12
+vault_pass*
+*vault*.yml
+credentials*
+
+# Ansible
+*.retry
+collections/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log
