@@ -13,9 +13,11 @@ argument_specs:
       mssql_user_management_password:
         description: Authentication password
         type: str
+        no_log: true
       mssql_user_management_api_key:
         description: API key for authentication
         type: str
+        no_log: true
       mssql_user_management_validate_certs:
         description: Validate SSL certificates
         type: bool

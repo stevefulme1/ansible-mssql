@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2] - 2026-05-18
+
+### Security
+- Added `no_log: true` to all `password` and `api_key` role arguments to prevent credential exposure in logs
+- Changed EDA webhook default listen address from `0.0.0.0` to `127.0.0.1` to prevent unintended network exposure
+- Added payload size limit (1 MB) to EDA webhook event source
+
 ## [2.0.1] - 2026-05-18
 
 ### Security

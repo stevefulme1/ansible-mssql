@@ -13,9 +13,11 @@ argument_specs:
       mssql_disaster_recovery_password:
         description: Authentication password
         type: str
+        no_log: true
       mssql_disaster_recovery_api_key:
         description: API key for authentication
         type: str
+        no_log: true
       mssql_disaster_recovery_validate_certs:
         description: Validate SSL certificates
         type: bool
