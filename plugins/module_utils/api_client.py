@@ -67,7 +67,10 @@ class ApiClient:
         return resp.json()
 
     def update(self, resource_type, resource_id, params):
-        resp = self.session.put(self._url(f"{resource_type}s/{resource_id}"), json=self._filter_params(params), timeout=30)
+        url = self._url(f"{resource_type}s/{resource_id}")
+        resp = self.session.put(
+            url, json=self._filter_params(params), timeout=30
+        )
         resp.raise_for_status()
         return resp.json()
 
