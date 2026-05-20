@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.2.0] - 2026-05-20
+
+### Added
+- `mssql_database` module -- CREATE/ALTER/DROP DATABASE via pymssql
+- `mssql_database_info` module -- query sys.databases for database metadata
+- `mssql_login` module -- CREATE/ALTER/DROP LOGIN (server-level auth)
+- `mssql_login_info` module -- query sys.server_principals for login metadata
+- `mssql_user` module -- CREATE/ALTER/DROP USER (database-level)
+- `mssql_user_info` module -- query sys.database_principals for user metadata
+- `mssql_role_member` module -- ALTER ROLE ADD/DROP MEMBER for role membership
+- `mssql_permission` module -- GRANT/REVOKE/DENY permissions on securables
+- `mssql_ag` module -- CREATE/ALTER/DROP Always On Availability Groups
+- `mssql_ag_info` module -- query sys.availability_groups/replicas/databases
+- `mssql_backup` module -- BACKUP DATABASE / BACKUP LOG with compression/checksum
+- `mssql_query` module -- execute arbitrary T-SQL, return result sets
+- `plugins/module_utils/mssql_client.py` -- shared pymssql connection wrapper
+- `plugins/doc_fragments/mssql.py` -- shared connection parameter documentation
+
+### Notes
+- All modules use pymssql for real T-SQL operations against SQL Server
+- All modules support check_mode
+- All modules pass ansible-test sanity (validate-modules, pep8, pylint) and ansible-lint --strict
+
 ## [0.1.0] - 2026-05-20
 
 ### Removed
