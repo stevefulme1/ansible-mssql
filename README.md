@@ -1,10 +1,17 @@
 # stevefulme1.mssql
 
-Ansible Collection for Microsoft SQL Server -- database/login/user/role management, AG, TDE, Agent jobs, Azure SQL, and EDA event-driven automation.
+Ansible Collection for Microsoft SQL Server -- database, login, user, role, AG, and backup management.
+
+**Status: Pre-release (0.1.0). Under active development.**
 
 ## Overview
 
-This collection provides **55 modules** for automating Microsoft SQL Server infrastructure (on-premises and Azure SQL), along with 10 operational roles, a dynamic inventory plugin, and CI/CD workflows.
+This collection will provide modules for automating Microsoft SQL Server using real database drivers:
+
+- **On-premises** -- via `pymssql` or `pyodbc` Python drivers for T-SQL operations
+- **Azure SQL** -- via Azure Resource Manager REST API
+
+Placeholder roles are included for common operational workflows.
 
 ## Requirements
 
@@ -21,22 +28,17 @@ Or from source:
 
 ```bash
 ansible-galaxy collection build
-ansible-galaxy collection install stevefulme1-mssql-2.0.0.tar.gz
+ansible-galaxy collection install stevefulme1-mssql-0.1.0.tar.gz
 ```
 
 ## Included Content
 
-### Modules (55)
+### Modules
 
-CRUD and info modules covering:
+No modules yet. Modules will use:
 
-- **Databases** -- create, alter, drop, backup, restore
-- **Security** -- logins, users, roles, permissions, TDE
-- **Availability** -- Always On AG, failover, replicas
-- **Agent** -- jobs, schedules, operators, alerts
-- **Azure SQL** -- managed instances, elastic pools, firewall rules
-- **Maintenance** -- index rebuild, statistics update, integrity checks
-- **Monitoring** -- DMV queries, performance counters, wait stats
+- `pymssql` or `pyodbc` for SQL Server operations via T-SQL
+- Azure Resource Manager API for Azure SQL resources
 
 ### Roles (10)
 
@@ -53,31 +55,12 @@ CRUD and info modules covering:
 | `mssql_security_hardening` | Security baseline configuration |
 | `mssql_user_management` | User and role management |
 
-### Inventory Plugin
-
-- `mssql_inventory` -- Dynamic inventory from SQL Server instances
-
-## Usage
-
-```yaml
-- name: Create a database
-  stevefulme1.mssql.mssql_database:
-    host: "{{ mssql_host }}"
-    username: "{{ mssql_user }}"
-    password: "{{ mssql_pass }}"
-    name: myapp_db
-    recovery_model: FULL
-    state: present
-```
-
 ## License
 
-Apache-2.0
+GPL-3.0-or-later
 
 ## Community
 
 - [Contributing](CONTRIBUTING.md) - How to contribute to this project
 - [Code of Conduct](CODE_OF_CONDUCT.md) - Ansible Community Code of Conduct
 - [Security Policy](SECURITY.md) - How to report security vulnerabilities
-- [License](COPYING) - GPL-3.0
-

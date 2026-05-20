@@ -1,48 +1,19 @@
 # Changelog
 
-## [2.1.2] - 2026-05-18
+## [0.1.0] - 2026-05-20
 
-### Security
-- Added `no_log: true` to all `password` and `api_key` role arguments to prevent credential exposure in logs
-- Changed EDA webhook default listen address from `0.0.0.0` to `127.0.0.1` to prevent unintended network exposure
-- Added payload size limit (1 MB) to EDA webhook event source
+### Removed
+- Deleted 54 fabricated modules that used fake REST API endpoints instead of real pymssql/pyodbc SQL operations
+- Deleted fabricated api_client.py module_utils (generic REST wrapper)
+- Deleted fabricated mssql_inventory dynamic inventory plugin
+- Deleted fabricated EDA event source plugins (agent_webhook, azure_activity_log, service_broker)
+- Deleted associated unit tests for removed modules
 
-## [2.0.1] - 2026-05-18
+### Retained
+- 10 placeholder roles for common SQL Server operational workflows
+- Collection scaffolding (LICENSE, CONTRIBUTING, CODE_OF_CONDUCT, SECURITY, MAINTAINERS)
+- CI/CD workflow configuration
 
-### Security
-- Prevent credential leak in API request bodies: connection params (password,
-  api_key, username, host, validate_certs) are now stripped before POST/PUT
-- Added request timeout (30 s) to all HTTP methods to prevent hung connections
-- Hardened .gitignore against accidental credential commits
-
-## [2.0.0] - 2026-05-17
-
-### Added
-- Idempotency: get-before-write with state comparison in 27 modules
-- Pagination support (limit/offset/max_results) for all 27 info modules
-- EDA event filter plugin
-- Comprehensive test suites for 15 MSSQL modules
-- Pre-commit and linting configuration
-- Sanity tests for ansible-core 2.16/2.17/2.18/2.20
-
-### Fixed
-- Pylint unhashable-member false positives resolved
-- Stale sanity ignore files removed
-- Role README files added for Galaxy compliance
-- Galaxy import validation issues resolved
-- CI failures resolved
-
-## [1.2.0] - 2026-05-15
-
-### Added
-- 54 modules covering full Microsoft SQL Server platform
-- 10 Day-2 operation roles
-- EDA source plugins
-- Dynamic inventory plugin
-
-## [1.0.0] - 2026-05-15
-
-### Added
-- Initial release with database, login, user, role, AG, TDE, and Agent job modules
-- EDA event-driven automation support
-- Unit tests and CI pipeline
+### Notes
+- Version reset to 0.1.0 to reflect pre-release status
+- Future modules will use pymssql/pyodbc for T-SQL operations and Azure RM API for Azure SQL
