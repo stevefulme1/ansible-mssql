@@ -1,3 +1,3 @@
-# Contributor Covenant Code of Conduct
+# Community Code of Conduct
 
-See https://www.contributor-covenant.org/version/2/1/code_of_conduct/
+Please see the official [Ansible Community Code of Conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html).
