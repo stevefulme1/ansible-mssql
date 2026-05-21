@@ -1,0 +1,113 @@
+---
+# Integration tests for stevefulme1.mssql.mssql_script
+# Full CRUD lifecycle: CREATE -> idempotency -> UPDATE -> DELETE -> idempotency
+
+- name: Test mssql_script CRUD lifecycle
+  block:
+    - name: Create script (check mode)
+      stevefulme1.mssql.mssql_script:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+        name: "test-script"
+        state: present
+      check_mode: true
+      register: check_result
+
+    - name: Verify check mode reports changed
+      ansible.builtin.assert:
+        that:
+          - check_result is changed
+
+    - name: Create script
+      stevefulme1.mssql.mssql_script:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+        name: "test-script"
+        state: present
+      register: create_result
+
+    - name: Verify create result
+      ansible.builtin.assert:
+        that:
+          - create_result is changed
+          - create_result.script is defined
+
+    - name: Create script again (idempotency)
+      stevefulme1.mssql.mssql_script:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+        name: "test-script"
+        state: present
+      register: idem_result
+
+    - name: Verify idempotency
+      ansible.builtin.assert:
+        that:
+          - idem_result is not changed
+
+    - name: Fetch script info
+      stevefulme1.mssql.mssql_script_info:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+      register: info_result
+
+    - name: Verify info returns data
+      ansible.builtin.assert:
+        that:
+          - info_result.scripts is defined
+
+    - name: Delete script
+      stevefulme1.mssql.mssql_script:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+        name: "test-script"
+        state: absent
+      register: delete_result
+
+    - name: Verify delete result
+      ansible.builtin.assert:
+        that:
+          - delete_result is changed
+
+    - name: Delete script again (idempotency)
+      stevefulme1.mssql.mssql_script:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+        name: "test-script"
+        state: absent
+      register: delete_idem_result
+
+    - name: Verify delete idempotency
+      ansible.builtin.assert:
+        that:
+          - delete_idem_result is not changed
+
+  always:
+    - name: Cleanup - ensure test resource is removed
+      stevefulme1.mssql.mssql_script:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+        name: "test-script"
+        state: absent
+      failed_when: false

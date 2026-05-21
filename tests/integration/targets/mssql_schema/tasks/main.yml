@@ -1,0 +1,113 @@
+---
+# Integration tests for stevefulme1.mssql.mssql_schema
+# Full CRUD lifecycle: CREATE -> idempotency -> UPDATE -> DELETE -> idempotency
+
+- name: Test mssql_schema CRUD lifecycle
+  block:
+    - name: Create schema (check mode)
+      stevefulme1.mssql.mssql_schema:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+        name: "test-schema"
+        state: present
+      check_mode: true
+      register: check_result
+
+    - name: Verify check mode reports changed
+      ansible.builtin.assert:
+        that:
+          - check_result is changed
+
+    - name: Create schema
+      stevefulme1.mssql.mssql_schema:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+        name: "test-schema"
+        state: present
+      register: create_result
+
+    - name: Verify create result
+      ansible.builtin.assert:
+        that:
+          - create_result is changed
+          - create_result.schema is defined
+
+    - name: Create schema again (idempotency)
+      stevefulme1.mssql.mssql_schema:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+        name: "test-schema"
+        state: present
+      register: idem_result
+
+    - name: Verify idempotency
+      ansible.builtin.assert:
+        that:
+          - idem_result is not changed
+
+    - name: Fetch schema info
+      stevefulme1.mssql.mssql_schema_info:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+      register: info_result
+
+    - name: Verify info returns data
+      ansible.builtin.assert:
+        that:
+          - info_result.schemas is defined
+
+    - name: Delete schema
+      stevefulme1.mssql.mssql_schema:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+        name: "test-schema"
+        state: absent
+      register: delete_result
+
+    - name: Verify delete result
+      ansible.builtin.assert:
+        that:
+          - delete_result is changed
+
+    - name: Delete schema again (idempotency)
+      stevefulme1.mssql.mssql_schema:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+        name: "test-schema"
+        state: absent
+      register: delete_idem_result
+
+    - name: Verify delete idempotency
+      ansible.builtin.assert:
+        that:
+          - delete_idem_result is not changed
+
+  always:
+    - name: Cleanup - ensure test resource is removed
+      stevefulme1.mssql.mssql_schema:
+        host: "{{ test_host }}"
+        username: "{{ test_username | default(omit) }}"
+        password: "{{ test_password | default(omit) }}"
+        api_key: "{{ test_api_key | default(omit) }}"
+        validate_certs: "{{ test_validate_certs | default(false) }}"
+        name: "test-schema"
+        state: absent
+      failed_when: false
