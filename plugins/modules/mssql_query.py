@@ -134,7 +134,7 @@ def main():
                 # Convert non-serializable types to strings
                 for row in results:
                     for key, value in row.items():
-                        if not isinstance(value, (str, int, float, bool, type(None))):
+                        if value is not None and not isinstance(value, (str, int, float, bool)):
                             row[key] = str(value)
                 rowcount = len(results)
             except Exception:

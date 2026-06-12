@@ -67,7 +67,17 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: pip install pytest requests ansible-core
+      - name: Check for unit tests
+        id: check_tests
+        working-directory: ansible_collections/stevefulme1/mssql
+        run: |
+          if find tests/unit -name "test_*.py" -type f | grep -q .; then
+            echo "has_tests=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_tests=false" >> $GITHUB_OUTPUT
+          fi
       - name: Unit tests
+        if: steps.check_tests.outputs.has_tests == 'true'
         working-directory: ansible_collections/stevefulme1/mssql
         env:
           PYTHONPATH: ${{ github.workspace }}
