@@ -2,7 +2,7 @@
 
 Ansible Collection for Microsoft SQL Server -- database, login, user, role, AG, and backup management.
 
-**Status: Pre-release (0.2.0). Under active development.**
+**Status: Pre-release (0.1.0). Under active development.**
 
 ## Overview
 
@@ -24,27 +24,29 @@ Or from source:
 
 ```bash
 ansible-galaxy collection build
-ansible-galaxy collection install stevefulme1-mssql-0.2.0.tar.gz
+ansible-galaxy collection install stevefulme1-mssql-0.1.0.tar.gz
 ```
 
 ## Included Content
 
-### Modules (12)
+### Modules (14)
 
 | Module | Description |
 |--------|-------------|
+| `mssql_ag` | Manage Always On Availability Groups |
+| `mssql_ag_info` | Gather AG metadata from sys.availability_groups |
+| `mssql_backup` | Backup databases (full, differential, log) |
 | `mssql_database` | Create, alter, or drop databases |
 | `mssql_database_info` | Gather database metadata from sys.databases |
 | `mssql_login` | Create, alter, or drop server-level logins |
 | `mssql_login_info` | Gather login metadata from sys.server_principals |
+| `mssql_permission` | GRANT, REVOKE, or DENY permissions |
+| `mssql_permission_info` | Gather permission metadata from sys.database_permissions |
+| `mssql_query` | Execute arbitrary T-SQL and return results |
+| `mssql_role_member` | Add/remove users from database roles |
+| `mssql_role_member_info` | Gather role membership metadata |
 | `mssql_user` | Create, alter, or drop database-level users |
 | `mssql_user_info` | Gather user metadata from sys.database_principals |
-| `mssql_role_member` | Add/remove users from database roles |
-| `mssql_permission` | GRANT, REVOKE, or DENY permissions |
-| `mssql_ag` | Manage Always On Availability Groups |
-| `mssql_ag_info` | Gather AG metadata from sys.availability_groups |
-| `mssql_backup` | Backup databases (full, differential, log) |
-| `mssql_query` | Execute arbitrary T-SQL and return results |
 
 ### Module Utils
 
